@@ -137,6 +137,10 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
 }
 
 extension ViewController: ImageEditorDelegate {
+    func buildActions(actions: inout [Action], globalActions: inout [Action]) {
+        actions.append(UndoAction(CommandStack.INSTANCE))
+    }
+
     func performDone(_ image: UIImage?, bounds: CGRect?) {
         if let newImage = image, let frame = bounds {
             let imageView = UIImageView(frame: frame)
@@ -145,4 +149,5 @@ extension ViewController: ImageEditorDelegate {
         }
         currentImageEditor?.removeFromSuperview()
     }
+
 }

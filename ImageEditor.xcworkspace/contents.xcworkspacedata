@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:../Layoutable/Layoutable/Layoutable.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:ImageEditor/ImageEditor.xcodeproj">
    </FileRef>
    <FileRef

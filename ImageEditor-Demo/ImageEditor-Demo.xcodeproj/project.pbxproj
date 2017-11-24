@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8A2518591FC6A480005E429D /* UIKit+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2518581FC6A480005E429D /* UIKit+Extensions.swift */; };
 		8A9FE69B1FC6739C00EFE156 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9FE69A1FC6739C00EFE156 /* AppDelegate.swift */; };
 		8A9FE69D1FC6739C00EFE156 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9FE69C1FC6739C00EFE156 /* ViewController.swift */; };
 		8A9FE6A01FC6739C00EFE156 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A9FE69E1FC6739C00EFE156 /* Main.storyboard */; };
@@ -31,7 +30,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		8A2518581FC6A480005E429D /* UIKit+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIKit+Extensions.swift"; path = "../../ImageEditor/ImageEditor/Editor/UIKit+Extensions.swift"; sourceTree = "<group>"; };
 		8A9FE6971FC6739C00EFE156 /* ImageEditor-Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ImageEditor-Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A9FE69A1FC6739C00EFE156 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8A9FE69C1FC6739C00EFE156 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -76,7 +74,6 @@
 			children = (
 				8A9FE69A1FC6739C00EFE156 /* AppDelegate.swift */,
 				8A9FE69C1FC6739C00EFE156 /* ViewController.swift */,
-				8A2518581FC6A480005E429D /* UIKit+Extensions.swift */,
 				8A9FE69E1FC6739C00EFE156 /* Main.storyboard */,
 				8A9FE6A11FC6739C00EFE156 /* Assets.xcassets */,
 				8A9FE6A31FC6739C00EFE156 /* LaunchScreen.storyboard */,
@@ -168,7 +165,6 @@
 			files = (
 				8A9FE69D1FC6739C00EFE156 /* ViewController.swift in Sources */,
 				8A9FE69B1FC6739C00EFE156 /* AppDelegate.swift in Sources */,
-				8A2518591FC6A480005E429D /* UIKit+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

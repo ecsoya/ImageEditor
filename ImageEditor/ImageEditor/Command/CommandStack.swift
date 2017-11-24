@@ -8,51 +8,54 @@
 
 import UIKit
 
-class CommandStack {
+public class CommandStack: Observable {
 
-    static let INSTANCE: CommandStack = CommandStack()
+    public static let INSTANCE: CommandStack = CommandStack()
 
     fileprivate var undoable = [Command]()
     fileprivate var redoable = [Command]()
 
-    fileprivate init() {
-
+    public override init() {
+        super.init()
     }
 
-    func execute(_ command: Command) {
+    public func execute(_ command: Command) {
         if !command.canExecute() {
             return
         }
         undoable.append(command)
+        firePropertyChanges()
     }
 
-    func canRedo() -> Bool {
+    public func canRedo() -> Bool {
         if !redoable.isEmpty, let command = redoable.last {
             return command.canRedo()
         }
         return false
     }
 
-    func canUndo() -> Bool {
+    public func canUndo() -> Bool {
         if !undoable.isEmpty, let command = undoable.last {
             return command.canUndo()
         }
         return false
     }
-    
-    func redo() {
+
+    public func redo() {
         if canRedo() {
             let command = redoable.removeLast()
             command.execute()
             undoable.append(command)
+            firePropertyChanges()
         }
     }
 
-    func undo() {
+    public func undo() {
         if canUndo() {
             let command = undoable.removeLast()
             command.undo()
             redoable.append(command)
+            firePropertyChanges()
         }
     }
 }

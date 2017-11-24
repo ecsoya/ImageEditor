@@ -10,6 +10,8 @@ import UIKit
 
 public protocol ImageEditorDelegate {
     func performDone(_ image: UIImage?, bounds: CGRect?)
+
+    func buildActions(actions: inout [Action], globalActions: inout [Action])
 }
 
 public class ImageEditor: UIView, ImageEditProtocol {
@@ -26,15 +28,25 @@ public class ImageEditor: UIView, ImageEditProtocol {
         }
     }
 
-    public var delegate: ImageEditorDelegate?
+    public var delegate: ImageEditorDelegate? {
+        didSet {
+            if let value = delegate, var actions = actionView.actions, var globalActions = actionView.globalActions {
+                value.buildActions(actions: &actions, globalActions: &globalActions)
+                actionView.actions = actions
+                actionView.globalActions = globalActions
+            }
+        }
+    }
 
-    public var actionHeight = CGFloat(22)
+    public var actionHeight = CGFloat(30)
 
     public var actionSpacing = CGFloat(2)
 
+    let commandStack = CommandStack.INSTANCE
+
     fileprivate var visibleView: UIView!
-    fileprivate var imageView: UIImageView!
-    fileprivate var actionView: UIView!
+    fileprivate var imageProcessor = ImageProcessor()
+    fileprivate var actionView: ActionView!
 
     fileprivate var imageViewCenter: CGPoint?
 
@@ -57,23 +69,23 @@ public class ImageEditor: UIView, ImageEditProtocol {
         }
 
         if let center = imageViewCenter {
-            imageView.center = center
+            imageProcessor.center = center
         } else {
-            imageView.frame = computeImageViewFrame()
+            imageProcessor.frame = computeImageViewFrame()
         }
 
         actionView.frame = CGRect(x: 0, y: self.bounds.height - actionHeight * 2, width: self.bounds.width, height: actionHeight * 2)
     }
 
     fileprivate func computeImageViewFrame() -> CGRect {
-        var visibleArea = self.bounds
+        var visibleArea = self.bounds.insetBy(dx: 10, dy: actionHeight * 2.1)
         if let holder = imageHolderView, let rect = holder.superview?.convert(holder.frame, to: self)  {
-            visibleArea = rect
+            visibleArea = rect.insetBy(dx: 10, dy: actionHeight * 2.1)
         }
         let center = visibleArea.center
         var width = CGFloat(0)
         var height = CGFloat(0)
-        if let imageSize = imageView.image?.size {
+        if let imageSize = imageProcessor.image?.size {
             if imageSize.width < visibleArea.width && imageSize.height < visibleArea.height {
                 width = imageSize.width
                 height = imageSize.height
@@ -90,21 +102,37 @@ public class ImageEditor: UIView, ImageEditProtocol {
         visibleView = UIView()
         self.addSubview(visibleView)
 
-        imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.layer.borderWidth = 1
-        imageView.layer.borderColor = UIColor.yellow.cgColor
-        self.addSubview(imageView)
+        self.addSubview(imageProcessor)
 
-        actionView = UIView()
+        actionView = ActionView(commandStack: commandStack)
+        actionView.actions = buildActions()
+        actionView.globalActions = buildGlobalActions()
+        actionView.delegate = self
         self.addSubview(actionView)
 
         registerForOrientationChanges()
     }
 
+    fileprivate func buildActions() -> [Action] {
+        var actions = [Action]()
+        let cropAction = Action(image: "crop")
+        var cropActions = [Action]()
+        cropActions.append(Action(image: "crop_free"))
+        cropActions.append(Action(image: "crop_polygon"))
+        cropActions.append(Action(image: "crop_oval"))
+        cropAction.actions = cropActions
+        actions.append(cropAction)
+        actions.append(UndoAction(commandStack))
+        return actions
+    }
+
+    fileprivate func buildGlobalActions() -> [Action] {
+        return [UndoAction(commandStack), RedoAction(commandStack)]
+    }
+
     fileprivate func updateImage() {
         imageViewCenter = nil
-        imageView.image = image
+        imageProcessor.image = image
         setNeedsLayout()
     }
 
@@ -130,6 +158,25 @@ public class ImageEditor: UIView, ImageEditProtocol {
         unregisterFromOrientationChanges()
     }
 
+}
+
+extension ImageEditor: ActionViewDelegate {
+    func performAction(_ action: Action) {
+
+    }
+
+    func performCancel(_ exit: Bool) {
+        if exit {
+            self.removeFromSuperview()
+        }
+    }
+
+    func performDone(_ exit: Bool) {
+        if exit {
+            delegate?.performDone(nil, bounds: nil)
+            self.removeFromSuperview()
+        }
+    }
 }
 
 extension ImageEditor {

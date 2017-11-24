@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension CGRect {
+public extension CGRect {
     var x: CGFloat {
         get {
             return self.origin.x
@@ -60,7 +60,7 @@ extension CGRect {
 }
 
 //Extension to get the scale values and rotate angle from transform
-extension CGAffineTransform {
+public extension CGAffineTransform {
     public var scaleX: CGFloat {
         return sqrt(a * a + c * c)
     }
@@ -69,5 +69,37 @@ extension CGAffineTransform {
     }
     public var rotationAngle: CGFloat {
         return atan2(b, a)
+    }
+}
+
+public extension UIImage {
+    static func fromColor(_ color: UIColor, size: CGSize) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        if let ctx = UIGraphicsGetCurrentContext() {
+            ctx.saveGState()
+
+            let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+            ctx.setFillColor(color.cgColor)
+            ctx.fillEllipse(in: rect)
+
+            ctx.restoreGState()
+        }
+        let img = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return img
+    }
+
+    func fromColor(_ color: UIColor) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        if let ctx = UIGraphicsGetCurrentContext() {
+            ctx.saveGState()
+            let rect = CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height)
+            ctx.setFillColor(color.cgColor)
+            ctx.fillEllipse(in: rect)
+            ctx.restoreGState()
+        }
+        let img = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return img
     }
 }
